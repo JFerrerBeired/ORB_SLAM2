@@ -137,13 +137,13 @@ template<> inline void  TypedParameter<orbslam_input_mode>::copyValue(orbslam_in
 template<> inline void  TypedParameter<orbslam_input_mode>::setValue(const char* optarg)  {
 
 	if (std::string(optarg) == "auto")
-	{*((orbslam_input_mode*)_ptr) = orbslam_input_mode::automatic;}
+	{*((orbslam_input_mode*)ptr_) = orbslam_input_mode::automatic;}
 	else if (std::string(optarg) == "mono")
-	{*((orbslam_input_mode*)_ptr) = orbslam_input_mode::mono;}
+	{*((orbslam_input_mode*)ptr_) = orbslam_input_mode::mono;}
 	else if (std::string(optarg) == "stereo")
-	{*((orbslam_input_mode*)_ptr) = orbslam_input_mode::stereo;}
+	{*((orbslam_input_mode*)ptr_) = orbslam_input_mode::stereo;}
 	else if (std::string(optarg) == "rgbd")
-	{*((orbslam_input_mode*)_ptr) = orbslam_input_mode::rgbd;}
+	{*((orbslam_input_mode*)ptr_) = orbslam_input_mode::rgbd;}
 	else
 	{throw std::logic_error("The argument you gave for ORBSLAM Mode is incorrect, only 'auto', 'mono', 'stereo' or 'rgbd' are valid.");}
 };
