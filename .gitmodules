@@ -1,0 +1,3 @@
+[submodule "slamtimer"]
+	path = slamtimer
+	url = https://github.com/JFerrerBeired/slamtimer
