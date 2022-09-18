@@ -208,35 +208,36 @@ void Tracking::SetViewer(Viewer *pViewer)
 
 cv::Mat Tracking::GrabImageStereo(const cv::Mat &imRectLeft, const cv::Mat &imRectRight, const double &timestamp)
 {
+    auto t = Timer("GrabImageStereo");
     mImGray = imRectLeft;
     cv::Mat imGrayRight = imRectRight;
-
-    if(mImGray.channels()==3)
-    {
-        if(mbRGB)
+    
+        if(mImGray.channels()==3)
         {
-            cvtColor(mImGray,mImGray,CV_RGB2GRAY);
-            cvtColor(imGrayRight,imGrayRight,CV_RGB2GRAY);
+            if(mbRGB)
+            {
+                cvtColor(mImGray,mImGray,CV_RGB2GRAY);
+                cvtColor(imGrayRight,imGrayRight,CV_RGB2GRAY);
+            }
+            else
+            {
+                cvtColor(mImGray,mImGray,CV_BGR2GRAY);
+                cvtColor(imGrayRight,imGrayRight,CV_BGR2GRAY);
+            }
         }
-        else
+        else if(mImGray.channels()==4)
         {
-            cvtColor(mImGray,mImGray,CV_BGR2GRAY);
-            cvtColor(imGrayRight,imGrayRight,CV_BGR2GRAY);
+            if(mbRGB)
+            {
+                cvtColor(mImGray,mImGray,CV_RGBA2GRAY);
+                cvtColor(imGrayRight,imGrayRight,CV_RGBA2GRAY);
+            }
+            else
+            {
+                cvtColor(mImGray,mImGray,CV_BGRA2GRAY);
+                cvtColor(imGrayRight,imGrayRight,CV_BGRA2GRAY);
+            }
         }
-    }
-    else if(mImGray.channels()==4)
-    {
-        if(mbRGB)
-        {
-            cvtColor(mImGray,mImGray,CV_RGBA2GRAY);
-            cvtColor(imGrayRight,imGrayRight,CV_RGBA2GRAY);
-        }
-        else
-        {
-            cvtColor(mImGray,mImGray,CV_BGRA2GRAY);
-            cvtColor(imGrayRight,imGrayRight,CV_BGRA2GRAY);
-        }
-    }
 
     mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpORBextractorLeft,mpORBextractorRight,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth);
 
@@ -248,6 +249,7 @@ cv::Mat Tracking::GrabImageStereo(const cv::Mat &imRectLeft, const cv::Mat &imRe
 
 cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const double &timestamp)
 {
+    auto t = Timer("GrabImageRGBD");
     mImGray = imRGB;
     cv::Mat imDepth = imD;
 
@@ -279,6 +281,7 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const d
 
 cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 {
+    auto t = Timer("GrabImageMonocular");
     mImGray = im;
 
     if(mImGray.channels()==3)
@@ -308,6 +311,7 @@ cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
 
 void Tracking::Track()
 {
+    auto t = Timer("Track");
     if(mState==NO_IMAGES_YET)
     {
         mState = NOT_INITIALIZED;
@@ -604,7 +608,7 @@ void Tracking::StereoInitialization()
 
 void Tracking::MonocularInitialization()
 {
-
+    auto t = Timer("MonocularInitialization");
     if(!mpInitializer)
     {
         // Set Reference Frame
@@ -780,6 +784,7 @@ void Tracking::CreateInitialMapMonocular()
 
 void Tracking::CheckReplacedInLastFrame()
 {
+    auto t = Timer("CheckReplacedInLastFrame");
     for(int i =0; i<mLastFrame.N; i++)
     {
         MapPoint* pMP = mLastFrame.mvpMapPoints[i];
@@ -798,6 +803,7 @@ void Tracking::CheckReplacedInLastFrame()
 
 bool Tracking::TrackReferenceKeyFrame()
 {
+    auto t = Timer("TrackReferenceKeyFrame");
     // Compute Bag of Words vector
     mCurrentFrame.ComputeBoW();
 
@@ -908,6 +914,7 @@ void Tracking::UpdateLastFrame()
 
 bool Tracking::TrackWithMotionModel()
 {
+    auto t = Timer("TrackWithMotionModel");
     ORBmatcher matcher(0.9,true);
 
     // Update last frame pose according to its reference keyframe
@@ -974,6 +981,8 @@ bool Tracking::TrackLocalMap()
     // We have an estimation of the camera pose and some map points tracked in the frame.
     // We retrieve the local map and try to find matches to points in the local map.
 
+    auto t = Timer("TrackLocalMap");
+    
     UpdateLocalMap();
 
     SearchLocalPoints();
@@ -1184,6 +1193,7 @@ void Tracking::CreateNewKeyFrame()
 
 void Tracking::SearchLocalPoints()
 {
+    auto t = Timer("SearchLocalPoints");
     // Do not search map points already matched
     for(vector<MapPoint*>::iterator vit=mCurrentFrame.mvpMapPoints.begin(), vend=mCurrentFrame.mvpMapPoints.end(); vit!=vend; vit++)
     {
@@ -1236,6 +1246,7 @@ void Tracking::SearchLocalPoints()
 
 void Tracking::UpdateLocalMap()
 {
+    auto t = Timer("UpdateLocalMap");
     // This is for visualization
     mpMap->SetReferenceMapPoints(mvpLocalMapPoints);
 

@@ -789,6 +789,7 @@ vector<cv::KeyPoint> ORBextractor::DistributeOctTree(const vector<cv::KeyPoint>&
 
 void ORBextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoints)
 {
+    auto t = Timer("ComputeKeyPointsOctTree");
     allKeypoints.resize(nlevels);
 
     const float W = 30;
@@ -1068,6 +1069,7 @@ static void computeDescriptors(const Mat& image, vector<KeyPoint>& keypoints, Ma
 void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPoint>& _keypoints,
                       OutputArray _descriptors)
 { 
+    auto t = Timer("ORBextractor");
     if(_image.empty())
         return;
 
@@ -1096,8 +1098,10 @@ void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
 
     _keypoints.clear();
     _keypoints.reserve(nkeypoints);
-
+    
     int offset = 0;
+    {
+    auto t=Timer("Compute_descriptors_loop");
     for (int level = 0; level < nlevels; ++level)
     {
         vector<KeyPoint>& keypoints = allKeypoints[level];
@@ -1108,6 +1112,7 @@ void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
 
         // preprocess the resized image
         Mat workingMat = mvImagePyramid[level].clone();
+        
         GaussianBlur(workingMat, workingMat, Size(7, 7), 2, 2, BORDER_REFLECT_101);
 
         // Compute the descriptors
@@ -1126,11 +1131,12 @@ void ORBextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPo
         }
         // And add the keypoints to the output
         _keypoints.insert(_keypoints.end(), keypoints.begin(), keypoints.end());
-    }
+    }}
 }
 
 void ORBextractor::ComputePyramid(cv::Mat image)
 {
+    auto t = Timer("ComputePyramid");
     for (int level = 0; level < nlevels; ++level)
     {
         float scale = mvInvScaleFactor[level];

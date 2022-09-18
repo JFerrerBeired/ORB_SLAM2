@@ -25,6 +25,8 @@
 #include <list>
 #include <opencv/cv.h>
 
+#include <timer.hpp>
+
 
 namespace ORB_SLAM2
 {

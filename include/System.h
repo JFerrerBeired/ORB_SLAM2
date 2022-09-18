@@ -36,6 +36,8 @@
 #include "ORBVocabulary.h"
 #include "Viewer.h"
 
+#include <timer.hpp>
+
 namespace ORB_SLAM2
 {
 

@@ -45,6 +45,7 @@ ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 ${SLAMBENCH_INCLUDE_DIRS}
+${PROJECT_SOURCE_DIR}/slamtimer
 )
 
 
@@ -68,10 +69,12 @@ src/KeyFrameDatabase.cc
 src/Sim3Solver.cc
 src/Initializer.cc
 src/Viewer.cc
+slamtimer/timer.cpp
 )
 
 add_library(${PROJECT_NAME}-original SHARED
   orbslam2_library.cpp
+  slamtimer/timer.cpp
   )
 
 target_link_libraries(${PROJECT_NAME}-original

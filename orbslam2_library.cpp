@@ -160,7 +160,7 @@ cv::Mat M1l,M2l,M1r,M2r;
 
 
 bool sb_new_slam_configuration(SLAMBenchLibraryHelper * slam_settings) {
-
+	
 	slam_settings->addParameter(TypedParameter<orbslam_input_mode>("m", "mode",     "select input mode (auto,mono,stereo,rgbd)",    &input_mode, &default_input_mode));
 	slam_settings->addParameter(TypedParameter<std::string>("s", "settings",     "Path to the setting file",    &settings_file, &default_settings_file));
 	slam_settings->addParameter(TypedParameter<std::string>("voc", "vocabulary",     "Path to the vocabulary file",    &vocabulary_file, &default_vocabulary_file));
@@ -577,7 +577,8 @@ bool sb_update_frame (SLAMBenchLibraryHelper * , slambench::io::SLAMFrame* s) {
 }
 
 bool sb_process_once (SLAMBenchLibraryHelper * slam_settings)  {
-
+	
+	auto t = Timer("process");
 
 	if (input_mode == orbslam_input_mode::rgbd) {
 
