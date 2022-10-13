@@ -1393,6 +1393,7 @@ void Tracking::UpdateLocalKeyFrames()
 
 bool Tracking::Relocalization()
 {
+    auto t = Timer("Relocalization");
     // Compute Bag of Words Vector
     mCurrentFrame.ComputeBoW();
 
