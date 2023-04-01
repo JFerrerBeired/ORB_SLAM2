@@ -580,7 +580,7 @@ bool sb_update_frame (SLAMBenchLibraryHelper * , slambench::io::SLAMFrame* s) {
 
 bool sb_process_once (SLAMBenchLibraryHelper * slam_settings)  {
 	auto tt = std::chrono::high_resolution_clock::now();
-    std::cout << "FRAME\t" << std::chrono::duration_cast<std::chrono::nanoseconds>(t.time_since_epoch()).count() << std::endl;
+    std::cout << "FRAME\t" << std::chrono::duration_cast<std::chrono::nanoseconds>(tt.time_since_epoch()).count() << std::endl;
 
 	auto t = Timer("process");
 
