@@ -40,6 +40,8 @@
 #include <KeyFrame.h>
 #include <Converter.h>
 
+#include <chrono>
+
 //access to slam objects 
 static cv::Mat pose;
 static cv::Mat frameCV;
@@ -577,7 +579,9 @@ bool sb_update_frame (SLAMBenchLibraryHelper * , slambench::io::SLAMFrame* s) {
 }
 
 bool sb_process_once (SLAMBenchLibraryHelper * slam_settings)  {
-	
+	auto tt = std::chrono::high_resolution_clock::now();
+    std::cout << "FRAME\t" << std::chrono::duration_cast<std::chrono::nanoseconds>(t.time_since_epoch()).count() << std::endl;
+
 	auto t = Timer("process");
 
 	if (input_mode == orbslam_input_mode::rgbd) {
